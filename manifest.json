@@ -1,0 +1,20 @@
+{
+	"name": "Memex",
+	"version": "1.0",
+	"description": "Create memex like trails of web pages as you surf!",
+	"browser_action": {
+		"default_icon": "old_camera.png",
+		"popup": "popup.html"
+	},
+	"content_scripts": [{
+	      "matches": ["http://*/*"],
+	      "js": ["jquery-1.4.2.min.js", "jquery.rc4.js", "content_script.js"]
+	  }],
+	"options_page": "options.html",
+	"background_page": "background.html",
+	"permissions": [
+	"tabs",
+	"http://courses.ischool.berkeley.edu/i290-iol/f10/resources/*",
+	"http://*.delicious.com/*"
+	]
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+body {
+	text-align: center;
+}
+#container {
+	margin: 0 auto;
+	width: 700px;
+	background-image: url(memex.gif);
+	background-repeat: no-repeat;
+}
+#login {
+	width: 350px;
+}
+#login label {
+	color: #ffffff;
+}
+#login input {
+	margin:5px 5px 5px 5px;
+}
+
+#fields {
+	border:none;
+}
+
+.field {
+	display:block;
+}
+
+.field label {
+	float:left;
+	width:150px;
+	text-align:right;
+}
+
+.field input, select {
+	float:right;
+	width: 150px;
+}
+
+.clear {
+	clear:both;
+}
+#trails {
+	margin-top:60px;
+}
+#trails li {
+	list-style: none outside none;
+}
+a {
+	text-decoration:none;
+	color:#4863A0;
+}
+a:hover {
+	color:#333333;
+}
+</style>
+
+<script src="jquery-1.4.2.min.js"></script>
+<script src="jquery.rc4.js"></script>
+<script>
+$(function() {
+	if(localStorage['username'] != '' && localStorage['username'] != undefined) {
+		$('#username').val(localStorage['username']);
+		showTrails(localStorage['username']);
+	}
+	if(localStorage['password'] != '' && localStorage['password'] != undefined) {
+		password = $.rc4DecryptStr(localStorage['password'], localStorage['rc4Key']);
+		$('#password').val(localStorage['password']);
+	}
+	$('#login').submit(function() {
+		username = $('#username').val();
+		localStorage['username'] = username;
+		localStorage['password'] = $.rc4EncryptStr($('#password').val(), localStorage['rc4Key']); // store password in localstore with symmetric rc4 encryption
+		showTrails(username);
+		return false;
+	});
+	function showTrails(username) { // contains code from iolab blog
+		$.getJSON('http://feeds.delicious.com/v2/json/' + username + '?count=50&callback=?',
+		function(json){
+			$('#trails ul').contents().remove();
+			$(json).each(function(index) {
+				$('<li></li>').html('<a href="' + this.u + '">' + this.d + '</a>').appendTo('#trails ul');
+			});
+		});
+	}
+});
+</script>
+</head>
+
+<body>
+	<div id="container">
+		<form id ="login">
+			<fieldset id="fields">
+				<div class="field">
+					<label for="username">Delicious Username</label>
+					<input type="text" id="username" />
+					<div class="clear"></div>
+				</div>
+				<div class="field">
+					<label for="username">Password</label>
+					<input type="password" id="password" />
+					<div class="clear"></div>
+				</div>
+				<div class="field">
+					<input type="submit" id="submit" value="Update">
+					<div class="clear"></div>
+				</div>
+			</fieldset>	
+		</form>
+		<div id="trails">
+			<ul>
+			</ul>	
+		</div>	
+	</div id="container">
+</body>	
+</html>

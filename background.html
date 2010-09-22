@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<script src="jquery-1.4.2.min.js"></script>
+<script src="jquery.rc4.js"></script>
+<script>
+$(function() {
+	window.localStorage.clear();
+	localStorage['rc4Key'] = 'vannevarbush'; // key for rc4 encryption
+	var stepNum = 1;
+	chrome.extension.onRequest.addListener(
+		function(request, sender, sendResponse) {
+			if(request.action == 'getRecordingStatus') {
+				sendResponse({recording: localStorage['recording']});
+			}
+			else if(request.action == 'addCurrentTab') { // post current tab link to delicious
+				chrome.tabs.getSelected(null, function(tab) {
+					if(tab.url != '') {
+						if(stepNum == 1) { // trail begins! set title of this tab as the trail name
+							localStorage['trailName'] = 'trail trail:' + tab.title.toLowerCase().replace(/ /g, '_'); // sets 'trail' as a common tag for all trails making them easy to pull from delicious
+						}
+						password = $.rc4DecryptStr(localStorage['password'], localStorage['rc4Key']);
+						postData = {
+							url: tab.url,
+							description: tab.title,
+							tags: localStorage['trailName'] + ' ' + 'step:' + stepNum,
+							method: 'posts/add',
+							username: localStorage['username'],
+							password: password
+						};
+						// calling the awesome iolab proxy as shown on the iolab blog
+						$.getJSON('http://courses.ischool.berkeley.edu/i290-iol/f10/resources/delicious_proxy.php?callback=?', postData, function(rsp) {
+							if (rsp.result_code == "access denied") {
+								//alert('The provided Delicious username and password are incorrect.');
+								//todo user notifications
+							} else if (rsp.result_code == "something went wrong") {
+								//alert('There was an unspecified error communicating with Delicious.');
+							} else if (rsp.result_code == "done") {
+								// Bookmark was saved properly
+							}
+						});
+						stepNum++;
+					}
+				});
+				sendResponse({status: 'ok'});
+			}
+			else if(request.action == 'options') {
+				chrome.tabs.create({url: '/options.html'}, function(tab) {
+					// nothing doing
+				});
+				sendResponse({status: 'ok'});
+			}
+			else if(request.action == 'startRecording') {
+				localStorage['recording'] = 'true'; // recording is on
+				sendResponse({status: 'ok'});
+			}
+			else if(request.action == 'pauseRecording') {
+				localStorage['recording'] = 'false'; // recording is off but the trail lives! user checks facebook and comes back?
+				sendResponse({status: 'ok'});
+			}
+			else if(request.action == 'stopRecording') {
+				stepNum = 1; // current trail reset, effectively killing it!
+				localStorage['recording'] = 'false'; // recording is off
+				sendResponse({status: 'ok'});
+			}
+			else {
+				sendResponse({}); // snub them.
+			}
+		});
+	});
+	</script>
+	</html>

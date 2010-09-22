@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+body {
+	background-image: url(memex.gif);
+}
+</style>
+
+<script src="jquery-1.4.2.min.js"></script>
+<script>
+$(function() {
+	var isAuthorized = false;
+	if(localStorage['username'] == '' || localStorage['username'] == undefined 
+	|| localStorage['password'] == '' || localStorage['password'] == undefined) {
+		$('#record').text('Authorize'); // If user is not autorized we do not show the record button
+		$('#pause').attr('disabled', true);
+		$('#stop').attr('disabled', true);
+		$('#options').attr('disabled', true);
+	}
+	else {
+		isAuthorized = true;
+	}
+	chrome.extension.sendRequest({action: 'getRecordingStatus'}, function(response) {
+			if(response.recording == 'true') {
+				$('#record').attr('disabled', true);
+				$('#pause').attr('disabled', false);
+				$('#stop').attr('disabled', false);
+			}
+			else {
+				$('#record').attr('disabled', false);
+				$('#pause').attr('disabled', true);
+				$('#stop').attr('disabled', true);
+			}
+	});
+	$('#record').click(function() {
+		if(isAuthorized) {
+			$('#record').attr('disabled', true);
+			$('#pause').attr('disabled', false);
+			$('#stop').attr('disabled', false);
+			chrome.tabs.getSelected(null, function(tab) {
+				chrome.extension.sendRequest({action: 'startRecording', tab: tab}, function(response) {	
+				});
+			});
+		}
+		else {
+			chrome.extension.sendRequest({action: 'options'}, function(response) { // send user to the options page where we capture delcicious username and password
+			});
+		}
+	});
+	$('#pause').click(function() {
+		$('#record').attr('disabled', false);
+		$('#pause').attr('disabled', true);
+		$('#stop').attr('disabled', false);
+		chrome.extension.sendRequest({action: 'pauseRecording'}, function(response) {
+		});
+	});
+	$('#stop').click(function() {
+			$('#record').attr('disabled', false);
+			$('#pause').attr('disabled', true);
+			$('#stop').attr('disabled', true);
+		chrome.extension.sendRequest({action: 'stopRecording'}, function(response) {
+		});
+	});
+	$('#options').click(function() {
+		chrome.extension.sendRequest({action: 'options'}, function(response) {
+		});
+	});
+});
+</script>
+</head>
+
+<body>	
+	<div id="controls">
+		<button type="button" id="record">Record</button>
+		<button type="button" id="pause">Pause</button>
+		<button type="button" id="stop">Stop</button>
+		<br/><br/>
+		<button type="button" id="options">Trails</button>
+	</div>
+	<div id="trail">
+	</div>	
+</body>
+
+</html>
