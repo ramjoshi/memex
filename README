@@ -1,12 +1,11 @@
-The idea behind my memex implementation is this - browsing the web and jumping from one uri to another is itself very much like creating a trail of information. I have created a plugin that like a camera allows the user to click record and then every activity in the browser gets saved as a memex trail.
+The idea behind my memex implementation is this - browsing the web and navigating from one uri to another is analogous to creating a trail of information. I have created a plugin that like a camera allows the user to click record after which every uri navigation in the browser gets saved as a memex trail.
 
-A normal use case is as follows.
-User clicks the plugin icon and is shown the Authorize button
-User clicks Authorize and is taken to an options page where he provides a delicious username and password
-User clicks Update and his 50 most recent bookmarks are shown on the page
-User now clicks the plugin icon again and is shown the Record button
-User clicks Record and starts browsing
-User may click Pause at any time to stop making trails and check email for instance
-Use can click Stop at any time to terminate the trail
-The trails are named using the title of the first web page in the trail
-Users password is stored using rc4 symmetric enrcyption/decryption
+A typical use case is as follows.
+User clicks the plugin icon and is shown the Authorize button.
+User clicks Authorize and is taken to an options page where user provides a delicious username and password.
+User clicks Update and their 50 most recent bookmarks are shown on the page.
+User now clicks the plugin icon again and is shown the Record button.
+User clicks Record and starts browsing.
+User may click Pause at any time to stop making trails and check email for instance.
+User can click Stop at any time to terminate the trail.
+The trails are named using the title of the first web page in the trail.
