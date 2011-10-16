@@ -11,4 +11,5 @@ A typical use case is as follows.
 7. User can click Stop at any time to terminate the trail.
 8. The trails are named using the title of the first web page in the trail.
 
+![Vannevar Bush's Memex](https://github.com/ramjoshi/memex/blob/master/memex_article.jpg?raw=true "Vannevar Bush's Memex")
 ![Vannevar Bush's Memex](https://github.com/ramjoshi/memex/blob/master/MEMEX0L.jpg?raw=true "Vannevar Bush's Memex")
