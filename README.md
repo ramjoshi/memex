@@ -10,3 +10,5 @@ A typical use case is as follows.
 6. User may click Pause at any time to stop making trails and check email for instance.
 7. User can click Stop at any time to terminate the trail.
 8. The trails are named using the title of the first web page in the trail.
+
+![Vannevar Bush's Memex](/MEMEX0L.jpg "Vannevar Bush's Memex")
